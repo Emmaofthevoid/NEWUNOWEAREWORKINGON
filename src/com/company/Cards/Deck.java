@@ -10,16 +10,16 @@ public class Deck {
     public ArrayList<Card> deck;
 
     public Deck() {
-        this.type =  Type.values();
+        this.type = Type.values();
         this.value = Value.values();
         this.deck = new ArrayList<Card>();
         Card card;
-        for (Value v : Value.values()){
+        for (Value v : Value.values()) {
 
             for (Type t : Type.values()) {
 
-                if (t.name().contains("WILD")){
-                    if (v.name().contains("COLOR")||v.name().contains("PLUS4")) {
+                if (t.name().contains("WILD")) {
+                    if (v.name().contains("COLOR") || v.name().contains("PLUS4")) {
                         card = new Card(t, v);
                         deck.add(card);
                         deck.add(card);
@@ -52,13 +52,19 @@ public class Deck {
     }
 
 
-
-    public void shuffle () {
+    public void shuffle() {
         Collections.shuffle(deck);
     }
 
-    public Card drawCard(){
-        return deck.remove(deck.size()-1);
+    public Card drawCard() {
+        return deck.remove(deck.size() - 1);
+    }
+
+    public boolean containsCard(Card card) {
+        if (deck.contains(card)) {
+            return true;
+        }
+        return false;
     }
 
 }

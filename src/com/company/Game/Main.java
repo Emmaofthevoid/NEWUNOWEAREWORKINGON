@@ -10,11 +10,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-
-//        Deck deck = new Deck();
-//        deck.shuffle();
-////        Collections.shuffle(deck);
-//        System.out.println(deck.toString());
+        //VALI FINGER WEG -- MUCHO IMPORTANTE --
         Scanner input = new Scanner(System.in);
         App app = new App(input, System.out);
         app.Run();

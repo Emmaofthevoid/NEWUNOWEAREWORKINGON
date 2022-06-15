@@ -45,7 +45,31 @@ public abstract class Player {
         return hand.toString();
     }
 
-    public abstract Card playCard (String cardInput);
+    public Card removeCardFromHand(String cardInput) {
+
+        for (int i = 0; i < getHand().size(); i++) {
+            Card card = getHand().get(i);
+            if (card.getCard().equals(cardInput)) {
+
+                getHand().remove(card);
+
+                return card;
+            }
+        }
+        return null;
+    }
+
+    public Card checkIfCardIsInHandCards(String input){
+        for (Card card : hand){
+            System.out.println("DEBUG: checkIfCardIsInHandCards, Input: " + input + ", aktuelle Karte: " + card.getCard());
+            if(card.getCard().equals(input)){
+                System.out.println("DEBUG: checkIfCardIsInHandCards: found valid card: " + card);
+                return card;
+            }
+        }
+        System.out.println("DEBUG: checkIfCardIsInHandCards: did not find card, returning null");
+        return null;
+    }
 
 }
 

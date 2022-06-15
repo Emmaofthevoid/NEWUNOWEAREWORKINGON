@@ -25,6 +25,8 @@ public class Card {
         this.card = value.name();
     }
 
+
+
     public Type getType() {
         return type;
     }
@@ -43,6 +45,10 @@ public class Card {
 
     public String getCard() {
         return card.toLowerCase(Locale.ROOT);
+    }
+
+    public void setCard(String card) {
+        this.card = card;
     }
 
     @Override

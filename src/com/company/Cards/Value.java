@@ -14,6 +14,8 @@ public enum Value {
     REVERSE (20),
     DRAWTWO (20),
     SKIP (20),
+
+    //Wild cards:
     COLOR (50),
     PLUS4 (50);
     int points;
