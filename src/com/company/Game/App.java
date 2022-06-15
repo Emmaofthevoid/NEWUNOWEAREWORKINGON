@@ -126,6 +126,7 @@ public class App {
 
             if (validCard == null) {
                 System.out.println("Ihre Eingabe war falsch, bitte nochmal: " + currentPlayer.printHand() + "Erste Karte: " + stapel.obersteKarte());
+                playCard();
             } else {
                 if (cardCanBePlayed(validCard, stapel.obersteKarte())) {
                     System.out.println("old oberste karte : " + stapel.obersteKarte());
@@ -145,7 +146,6 @@ public class App {
             if (validCard.value == Value.COLOR && validCard.type == Type.WILD) {
                 System.out.println("Welche Farbe soll gewählt werden?");
 
-
                 if (input.nextLine().equals("BLUE"))
                     validCard.setType(Type.BLUE);
 
@@ -158,7 +158,9 @@ public class App {
                 if (input.nextLine().equals("YELLOW"))
                     validCard.setType(Type.YELLOW);
 
-
+                else {
+                    playCard();
+                }
             }
 
 
