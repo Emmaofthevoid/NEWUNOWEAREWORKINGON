@@ -34,25 +34,16 @@ public class App {
         //karteAblegen();
         exit = false;
         //ganze spiel schleife
-        while (!exit) {
-//            printState();
-//            playCard();
-            for (Player p : players) {
-                printState();
-                playCard();
-//                System.out.println("Player: " + currentPlayer.getName());
-                currentPlayer = nextPlayer();
-
-            }
+        playCard();
 //            currentPlayer = nextPlayer();
 
-        }
-
-        //TODO: Schleife draus machen! Darf/Muss noch verändert werden --> Doppelschleife
-
-        //karte muss ausgewählt werden, dann gespielt, entfernt von die handout und im stapel hingefügt
-        //spielrunden(game), draw/remove card
     }
+
+    //TODO: Schleife draus machen! Darf/Muss noch verändert werden --> Doppelschleife
+
+    //karte muss ausgewählt werden, dann gespielt, entfernt von die handout und im stapel hingefügt
+    //spielrunden(game), draw/remove card
+
 
     public void initialize() {
         deck.shuffle();
@@ -60,10 +51,19 @@ public class App {
         for (Player sp : players) {
             handOut(sp);
         }
-
         stapel.ersteKarte(deck);
         if (stapel.obersteKarte().value == Value.SKIP) {
             nextPlayer();
+        } else if (stapel.obersteKarte().value == Value.DRAWTWO) {
+            currentPlayer.takeCard(deck.drawCard());
+            currentPlayer.takeCard(deck.drawCard());
+        } else if (stapel.obersteKarte().value == Value.COLOR) {
+            nextPlayer();
+            changeColor(input);
+        }
+        else if (stapel.obersteKarte().value == Value.PLUS4) {
+            deck.shuffle();
+            stapel.ersteKarte(deck);
         }
 
         Collections.shuffle(players);
@@ -109,25 +109,37 @@ public class App {
 
 
     public void playCard() {
+        System.out.println("----------------------------------- this is play card");
 
         boolean exit = false;
-
+        //TODO, if first card is draw 2, then draw 2
 //        //TODO: verbessern
         currentPlayer.getHand().contains(playedCard);
         // playedCard.setCard(input.toString());
 
         exit = false;
         while (!exit) {
-            String cardInput = readInput(input);
+//            String cardInput = readInput(input);
+            printState();
+            System.out.println("Bitte Karte eingeben oder 'draw' schreiben: ");
+            String cardInput = input.nextLine();
             cardInput.toLowerCase(Locale.ROOT);
             System.out.println("Ihre Eingabe war: " + cardInput);
             Card validCard = currentPlayer.checkIfCardIsInHandCards(cardInput);
             System.out.println("checkIfCardIsInHandCards: return value: " + validCard);
 
-            if (validCard == null) {
-                System.out.println("Ihre Eingabe war falsch, bitte nochmal: " + currentPlayer.printHand() + "Erste Karte: " + stapel.obersteKarte());
-                playCard();
-            } else {
+            if (cardInput.equals("draw")) { //Karte wird gezogen
+                Card card = deck.drawCard();
+                currentPlayer.takeCard(card);
+                //TODO: "weiter", wenn Spieler keine passende Karte gezogen hat
+                //currentPlayer = nextPlayer();
+                continue;
+
+            } else if (validCard == null) { //Karte existiert nicht
+                System.out.println("Ihre Eingabe war falsch, bitte noch mal: " + currentPlayer.printHand() + "Erste Karte: " + stapel.obersteKarte());
+                continue;
+
+            } else { // Karte existiert
                 if (cardCanBePlayed(validCard, stapel.obersteKarte())) {
                     System.out.println("old oberste karte : " + stapel.obersteKarte());
                     stapel.ablegen(validCard);
@@ -146,21 +158,71 @@ public class App {
             if (validCard.value == Value.COLOR && validCard.type == Type.WILD) {
                 System.out.println("Welche Farbe soll gewählt werden?");
 
-                if (input.nextLine().equals("BLUE"))
+                if (input.nextLine().equals("BLUE")) {
                     validCard.setType(Type.BLUE);
+                    System.out.println("Die Farbe ist jetzt: " + validCard.getType());
 
-                if (input.nextLine().equals("RED"))
+                    continue;
+                }
+
+                if (input.nextLine().equals("RED")) {
                     validCard.setType(Type.RED);
+                    System.out.println("Die Farbe ist jetzt: " + validCard.getType());
+                    continue;
+                }
 
-                if (input.nextLine().equals("GREEN"))
+                if (input.nextLine().equals("GREEN")) {
                     validCard.setType(Type.GREEN);
+                    System.out.println("Die Farbe ist jetzt: " + validCard.getType());
+                    continue;
+                }
 
-                if (input.nextLine().equals("YELLOW"))
+                if (input.nextLine().equals("YELLOW")) {
                     validCard.setType(Type.YELLOW);
-
-                else {
+                    System.out.println("Die Farbe ist jetzt: " + validCard.getType());
+                    continue;
+                } else {
                     playCard();
                 }
+            }
+
+            if (validCard.getValue() == Value.DRAWTWO) {
+                Card card = deck.drawCard();
+                currentPlayer.takeCard(card);
+                currentPlayer.takeCard(card);
+
+                continue;
+            }
+
+            //TODO: Challenging-Möglichkeit zum Anzweifeln der Karte
+            //TODO: Farbwahl nach PLUS4
+            if (validCard.getValue() == Value.PLUS4 && validCard.getType() == Type.WILD) {
+                Card card = deck.drawCard();
+                System.out.println("Welche Farbe willst du, aldaaa?");
+                cardInput = input.nextLine();
+
+                if (cardInput.equals("BLUE")) {
+                    stapel.obersteKarte().setType(Type.BLUE);
+                    continue;
+                } else if (cardInput.equals("YELLOW")) {
+                    stapel.obersteKarte().setType(Type.YELLOW);
+                    continue;
+                } else if (cardInput.equals("RED")) {
+                    stapel.obersteKarte().setType(Type.RED);
+                    continue;
+                } else if (cardInput.equals("GREEN")) {
+                    stapel.obersteKarte().setType(Type.GREEN);
+                    continue;
+                } else {
+                    System.out.println("Bitte gültige Farbe wählen, du Ei!");
+                }
+
+                currentPlayer.takeCard(card);
+                currentPlayer.takeCard(card);
+                currentPlayer.takeCard(card);
+                currentPlayer.takeCard(card);
+
+                continue;
             }
 
 
@@ -192,7 +254,6 @@ public class App {
     }
 
     public void reverseDirection() {
-        currentPlayer = nextPlayer();
         currentPlayer = nextPlayer();
         currentPlayer = nextPlayer();
         System.out.println(currentPlayer.getName() + currentPlayer.printHand());
@@ -249,10 +310,8 @@ public class App {
             return true;
         }
         System.out.println("Karte kann nicht gespielt werden. Bitte andere Karte wählen. Oberste Karte : " + stapel.obersteKarte());
-        //cardCanBePlayed(handCard, ablageStapelCard);
+
         return false;
 
-
     }
-
 }

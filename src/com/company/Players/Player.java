@@ -61,13 +61,13 @@ public abstract class Player {
 
     public Card checkIfCardIsInHandCards(String input){
         for (Card card : hand){
-            System.out.println("DEBUG: checkIfCardIsInHandCards, Input: " + input + ", aktuelle Karte: " + card.getCard());
+            //System.out.println("DEBUG: checkIfCardIsInHandCards, Input: " + input + ", aktuelle Karte: " + card.getCard());
             if(card.getCard().equals(input)){
-                System.out.println("DEBUG: checkIfCardIsInHandCards: found valid card: " + card);
+                //System.out.println("DEBUG: checkIfCardIsInHandCards: found valid card: " + card);
                 return card;
             }
         }
-        System.out.println("DEBUG: checkIfCardIsInHandCards: did not find card, returning null");
+        //System.out.println("DEBUG: checkIfCardIsInHandCards: did not find card, returning null");
         return null;
     }
 
