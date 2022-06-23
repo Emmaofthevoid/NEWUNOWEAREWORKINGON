@@ -18,7 +18,7 @@ public class App {
     private final PrintStream output;
     private Player currentPlayer;
     private boolean exit = false;
-    private int currentPlayerIndex = 0;
+    private int currentPlayerIndex;
     private Card playedCard;
 
     public App(Scanner input, PrintStream output) {
@@ -51,24 +51,25 @@ public class App {
         for (Player sp : players) {
             handOut(sp);
         }
+        // Collections.shuffle(players);
+        currentPlayerIndex = (int) (Math.random() * (3)); // random index between 0 and 3
+        currentPlayer = players.get(currentPlayerIndex);
+        System.out.println("The first player is: " + currentPlayer.getName());
+
         stapel.ersteKarte(deck);
         if (stapel.obersteKarte().value == Value.SKIP) {
             nextPlayer();
         } else if (stapel.obersteKarte().value == Value.DRAWTWO) {
             currentPlayer.takeCard(deck.drawCard());
             currentPlayer.takeCard(deck.drawCard());
+            currentPlayer = nextPlayer();
         } else if (stapel.obersteKarte().value == Value.COLOR) {
             nextPlayer();
             changeColor(input);
-        }
-        else if (stapel.obersteKarte().value == Value.PLUS4) {
+        } else if (stapel.obersteKarte().value == Value.PLUS4) {
             deck.shuffle();
             stapel.ersteKarte(deck);
         }
-
-        Collections.shuffle(players);
-        currentPlayer = players.get(0);
-        System.out.println("The first player is: " + currentPlayer.getName());
     }
 
     public String readInput(Scanner eingabe) {
@@ -147,12 +148,11 @@ public class App {
                     System.out.println("new oberste karte : " + validCard);
                     currentPlayer.removeCardFromHand(validCard.toString());
 
-//                    System.out.println("Hand des Spielers: ");
-//                    currentPlayer.printHand();
+                    System.out.println("Hand des Spielers: ");
+                    currentPlayer.printHand();
                     currentPlayer = nextPlayer();
                     System.out.println("Neuer Spieler: " + currentPlayer.getName() + " " + currentPlayer.printHand());
-                }
-                else {
+                } else {
                     // wenn falsche Karte gespielt wurde (Strafkarte und nächster Spieler)
                     currentPlayer.takeCard(deck.drawCard());
                     currentPlayer = nextPlayer();
@@ -290,7 +290,7 @@ public class App {
     }
 
     public Player nextPlayer() {
-        System.out.println("Momentan spielt: " + currentPlayerIndex + "NAME DES SPIELERS : " + currentPlayer.getName());
+        System.out.println("Momentan spielt: " + currentPlayerIndex + " NAME DES SPIELERS : " + currentPlayer.getName());
         currentPlayerIndex++;
         if (currentPlayerIndex > 3) {
             currentPlayerIndex = 0;
