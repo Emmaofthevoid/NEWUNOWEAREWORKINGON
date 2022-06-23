@@ -152,6 +152,12 @@ public class App {
                     currentPlayer = nextPlayer();
                     System.out.println("Neuer Spieler: " + currentPlayer.getName() + " " + currentPlayer.printHand());
                 }
+                else {
+                    // wenn falsche Karte gespielt wurde (Strafkarte und nächster Spieler)
+                    currentPlayer.takeCard(deck.drawCard());
+                    currentPlayer = nextPlayer();
+
+                }
             }
 
             assert validCard != null;
@@ -309,7 +315,8 @@ public class App {
         } else if (handCard.type == Type.WILD) {
             return true;
         }
-        System.out.println("Karte kann nicht gespielt werden. Bitte andere Karte wählen. Oberste Karte : " + stapel.obersteKarte());
+        System.out.println("Karte kann nicht gespielt werden. Du hast es verkackt, strafkarte for your body. Oberste Karte : " + stapel.obersteKarte());
+
 
         return false;
 
