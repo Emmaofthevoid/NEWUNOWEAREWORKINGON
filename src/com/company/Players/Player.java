@@ -49,7 +49,7 @@ public abstract class Player {
 
         for (int i = 0; i < getHand().size(); i++) {
             Card card = getHand().get(i);
-            if (card.getCard().equals(cardInput)) {
+            if (card.getCard().equals(cardInput)) { // checkt er nicht!!!!
 
                 getHand().remove(card);
 

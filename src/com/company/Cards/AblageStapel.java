@@ -32,4 +32,10 @@ public class AblageStapel {
     public void ablegen(Card karte) {
         ablageStapel.add(karte);
     }
+
+    public Card removeFromStapel () {
+        ablageStapel.remove(obersteKarte());
+
+        return null;
+    }
 }

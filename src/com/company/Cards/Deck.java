@@ -67,5 +67,13 @@ public class Deck {
         return false;
     }
 
+    public Card add (Card card) {
+        deck.add(card);
+
+        return card;
+    }
+
+
+
 
 }
