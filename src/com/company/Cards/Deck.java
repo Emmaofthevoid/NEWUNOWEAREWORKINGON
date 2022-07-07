@@ -67,8 +67,4 @@ public class Deck {
         deck.add(card);
         return card;
     }
-
-
-
-
 }
