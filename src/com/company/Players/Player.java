@@ -39,6 +39,7 @@ public abstract class Player {
 
     public void takeCard(Card card) {
         hand.add(card);
+
     }
 
     public String printHand(){

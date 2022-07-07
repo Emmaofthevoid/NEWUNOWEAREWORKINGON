@@ -36,12 +36,8 @@ public class Deck {
                         deck.add(card);
                     }
                 }
-
             }
-
         }
-
-
     }
 
     @Override
@@ -59,17 +55,16 @@ public class Deck {
     public Card drawCard() {
         return deck.remove(deck.size() - 1);
     }
-
-    public boolean containsCard(Card card) {
-        if (deck.contains(card)) {
-            return true;
-        }
-        return false;
-    }
+//
+//    public boolean containsCard(Card card) {
+//        if (deck.contains(card)) {
+//            return true;
+//        }
+//        return false;
+//    }
 
     public Card add (Card card) {
         deck.add(card);
-
         return card;
     }
 

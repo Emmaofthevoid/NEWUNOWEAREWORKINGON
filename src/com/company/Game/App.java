@@ -41,6 +41,9 @@ public class App {
 
     //TODO: Schleife draus machen! Darf/Muss noch verändert werden --> Doppelschleife
 
+    //TODO: Karten sollen aus der Hand UND aus dem Deck entfernt werden, wenn sie am Stapel landen - momentan
+    //werden sie nämlich immer mehr...
+
     //karte muss ausgewählt werden, dann gespielt, entfernt von die handout und im stapel hingefügt
     //spielrunden(game), draw/remove card
 
@@ -51,7 +54,7 @@ public class App {
         for (Player sp : players) {
             handOut(sp);
         }
-        // Collections.shuffle(players);
+
         currentPlayerIndex = (int) (Math.random() * (3)); // random index between 0 and 3
         currentPlayer = players.get(currentPlayerIndex);
         System.out.println("The first player is: " + currentPlayer.getName());
@@ -122,20 +125,26 @@ public class App {
 
         exit = false;
         while (!exit) {
-//            String cardInput = readInput(input);
             printState();
-            countCards();
-            System.out.println("Bitte Karte eingeben oder 'd' schreiben: ");
+           // countCards();
+            System.out.println("Bitte Karte eingeben oder 'draw' schreiben: ");
             String cardInput = input.nextLine();
             cardInput.toLowerCase(Locale.ROOT);
             System.out.println("Ihre Eingabe war: " + cardInput);
             Card validCard = currentPlayer.checkIfCardIsInHandCards(cardInput);
             System.out.println("checkIfCardIsInHandCards: return value: " + validCard);
 
-            if (cardInput.equals("D".toLowerCase(Locale.ROOT))) {//Karte wird gezogen
-                //TODO
-                Card card = deck.drawCard();
+            Card card = deck.drawCard();
+
+            if (cardInput.equals("DRAW".toLowerCase(Locale.ROOT))) {//Karte wird gezogen
                 currentPlayer.takeCard(card);
+                System.out.println("Du hast folgende Karte gezogen: " + card);
+                if (!cardCanBePlayed(card, stapel.obersteKarte())){ //drawn card can't be played
+                    currentPlayer.takeCard(card);
+                    System.out.println("Die Karte wird der Hand hinzugefügt.");
+                    currentPlayer = nextPlayer();
+                    continue;
+                }
                 if (cardCanBePlayed(card, stapel.obersteKarte())) { // drawn card can be played
                     stapel.ablegen(card);
                     System.out.println("Karte wurde abgelegt. Oberste Karte: " + stapel.obersteKarte());
@@ -205,7 +214,7 @@ public class App {
             }
 
             if (validCard.getValue() == Value.DRAWTWO) {
-                Card card = deck.drawCard();
+                card = deck.drawCard();
                 currentPlayer.takeCard(card);
                 currentPlayer.takeCard(card);
 
@@ -222,7 +231,7 @@ public class App {
 
                 // currentPlayer = nextPlayer();
                 for (int i = 0; i < 4; i++) {
-                    Card card = deck.drawCard();
+                    card = deck.drawCard();
                     currentPlayer.takeCard(card);
                 }
 
@@ -304,9 +313,9 @@ public class App {
         return players.get(currentPlayerIndex);
     }
 
-    public void countCards() {
-        System.out.println(deck.deck.size() + stapel.ablageStapel.size() + players.get(0).getHand().size() + players.get(1).getHand().size() + players.get(2).getHand().size() + players.get(3).getHand().size());
-    }
+//    public void countCards() {
+//        System.out.println(deck.deck.size() + stapel.ablageStapel.size() + players.get(0).getHand().size() + players.get(1).getHand().size() + players.get(2).getHand().size() + players.get(3).getHand().size());
+//    }
 
     public boolean cardCanBePlayed(Card handCard, Card ablageStapelCard) {
         //  System.out.println("FUNKTION CARD CAN BE PLAYED");
@@ -316,7 +325,6 @@ public class App {
         if (handCard.getType() == ablageStapelCard.getType()) { //z.B. beide sind rote Karten
             //  System.out.println("Type of hand card: " + handCard.getType());
             System.out.println("Die oberste Karte ist: " + handCard);
-
             return true;
         } else if (handCard.getValue() == ablageStapelCard.getValue()) { //z.B. beide haben den Wert 3
             System.out.println("Die oberste Karte ist: " + handCard);
@@ -324,9 +332,15 @@ public class App {
         } else if (handCard.type == Type.WILD) {
             return true;
         }
+//        else if(input.nextLine().equals("draw")){
+//            System.out.println("Du möchtest eine Karte ziehen " + stapel.obersteKarte());
+//            return false;
+//        }
+        else if (handCard.getValue() != ablageStapelCard.getValue() && handCard.getType() != ablageStapelCard.getType()){
+            System.out.println("Karte kann nicht gespielt werden, bleibt auf der Hand: " + handCard);
+            return false;
+        }
         System.out.println("Karte kann nicht gespielt werden. Du hast es verkackt, strafkarte for your body. Oberste Karte : " + stapel.obersteKarte());
-
-
         return false;
 
     }
