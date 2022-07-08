@@ -205,18 +205,17 @@ public class App {
             if (validCard.getValue() == Value.PLUS4) {
                 System.out.println("Willst du die Karte anzweifeln? 'Ja' / 'Nein'");
                 cardInput = input.nextLine();
-                if(cardInput.toLowerCase(Locale.ROOT).equals("ja")){
-                    checkQuestionedPlus4();
-                    if(!checkQuestionedPlus4()){
+                if (cardInput.toLowerCase(Locale.ROOT).equals("ja")) {
+                    if (!checkIfOtherCardCanBePlayed()) {
                         skipPlayer();
                         skipPlayer();
                         skipPlayer();
                         System.out.println("Es spielt: " + currentPlayer.getName());
                         for (int i = 0; i < 4; i++) {
                             currentPlayer.takeCard(deck.drawCard());
+                            currentPlayer = nextPlayer();
                         }
-                    }
-                    else{
+                    } else {
                         skipPlayer();
                         skipPlayer();
                         skipPlayer();
@@ -224,14 +223,15 @@ public class App {
                         for (int i = 0; i < 6; i++) {
                             currentPlayer.takeCard(deck.drawCard());
                         }
+                        currentPlayer = nextPlayer();
                     }
                     continue;
                 }
-               if(cardInput.toLowerCase(Locale.ROOT).equals("nein")){ //dieser Teil funktioniert, hurra!
-                   for(int i = 0; i < 4; i++){
-                       currentPlayer.takeCard(deck.drawCard());
-                   }
-               }
+                if (cardInput.toLowerCase(Locale.ROOT).equals("nein")) { //dieser Teil funktioniert, hurra!
+                    for (int i = 0; i < 4; i++) {
+                        currentPlayer.takeCard(deck.drawCard());
+                    }
+                }
                 continue;
             }
 
@@ -327,17 +327,20 @@ public class App {
 
     }
 
-    public boolean checkQuestionedPlus4() {
-
+    public boolean checkIfOtherCardCanBePlayed() {
+        boolean otherCardCouldBePlayed = false;
         for (Card c : currentPlayer.getHand()) {
-            if (c.value.equals(stapel.obersteKarte().value) || c.type.equals(stapel.obersteKarte().type)) {
-                System.out.println("Der letzte Spieler hat die Karte zu Unrecht gespielt und muss 4 Karten heben!");
-                return false;
-            }
 
-            System.out.println("Falsche Anschuldigungen! Du musst 6 Karten heben!");
+            if (c.value.equals(stapel.vorletzteKarte().value) || c.type.equals(stapel.vorletzteKarte().type)) {
+                otherCardCouldBePlayed = true;
+            }
         }
-        return true;
+        if (otherCardCouldBePlayed == true) {
+            System.out.println("Der letzte Spieler hat die Karte zu Unrecht gespielt und muss 4 Karten heben!");
+            return true;
+        } else
+            System.out.println("Falsche Anschuldigungen! Du musst 6 Karten heben!");
+            return false;
     }
 }
 

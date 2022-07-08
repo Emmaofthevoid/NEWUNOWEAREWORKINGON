@@ -13,7 +13,7 @@ public abstract class Player {
     public Player(String name) {
         this.name = name;
         this.points = 0;
-        this.hand = new ArrayList<>() ;
+        this.hand = new ArrayList<>();
         this.UNOStatus = false;
     }
 
@@ -39,10 +39,9 @@ public abstract class Player {
 
     public void takeCard(Card card) {
         hand.add(card);
-
     }
 
-    public String printHand(){
+    public String printHand() {
         return hand.toString();
     }
 
@@ -60,10 +59,10 @@ public abstract class Player {
         return null;
     }
 
-    public Card checkIfCardIsInHandCards(String input){
-        for (Card card : hand){
+    public Card checkIfCardIsInHandCards(String input) {
+        for (Card card : hand) {
             //System.out.println("DEBUG: checkIfCardIsInHandCards, Input: " + input + ", aktuelle Karte: " + card.getCard());
-            if(card.getCard().equals(input)){
+            if (card.getCard().equals(input)) {
                 //System.out.println("DEBUG: checkIfCardIsInHandCards: found valid card: " + card);
                 return card;
             }
@@ -71,6 +70,7 @@ public abstract class Player {
         //System.out.println("DEBUG: checkIfCardIsInHandCards: did not find card, returning null");
         return null;
     }
-
 }
+
+
 

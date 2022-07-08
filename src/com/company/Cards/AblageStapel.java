@@ -29,6 +29,12 @@ public class AblageStapel {
         return card;
     }
 
+    public Card vorletzteKarte(){ //für +4 gebraucht
+        Card card = ablageStapel.get(ablageStapel.size() - 2);
+
+        return card;
+    }
+
     public void ablegen(Card karte) {
         ablageStapel.add(karte);
     }
