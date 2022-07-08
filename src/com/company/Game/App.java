@@ -5,6 +5,7 @@ import com.company.Players.HumanPlayer;
 import com.company.Players.Player;
 
 import java.io.PrintStream;
+import java.lang.reflect.WildcardType;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Locale;
@@ -151,8 +152,6 @@ public class App {
                 }
 
                 currentPlayer = nextPlayer();
-                //TODO: "weiter", wenn Spieler keine passende Karte gezogen hat
-                //currentPlayer = nextPlayer();
                 continue;
 
             } else if (validCard == null) { //Karte existiert nicht
@@ -161,7 +160,6 @@ public class App {
 
             } else { // Karte existiert
                 if (cardCanBePlayed(validCard, stapel.obersteKarte())) {
-                    //  System.out.println("old oberste karte : " + stapel.obersteKarte());
                     stapel.ablegen(validCard);
                     validCard = stapel.obersteKarte();
                     System.out.println("new oberste karte : " + validCard);
@@ -175,7 +173,6 @@ public class App {
                     // wenn falsche Karte gespielt wurde (Strafkarte und nächster Spieler)
                     currentPlayer.takeCard(deck.drawCard());
                     currentPlayer = nextPlayer();
-
                 }
             }
 
@@ -185,11 +182,11 @@ public class App {
                 card = deck.drawCard();
                 currentPlayer.takeCard(card);
                 currentPlayer.takeCard(card);
+                currentPlayer = nextPlayer();
 
                 continue;
             }
 
-            //TODO: Challenging-Möglichkeit zum Anzweifeln der Karte VERBESSERN - geht noch nicht!
             if (validCard.getValue() == Value.PLUS4 || validCard.getValue() == Value.COLOR) {
                 skipPlayer();
                 skipPlayer();
@@ -201,7 +198,6 @@ public class App {
                 skipPlayer();
             }
 
-            //TODO: ANZWEIFELN FUNKTIONIERT NICHT!!!!!!!!! ARGH FUCK THAT STUPID SHIT!!!!!
             if (validCard.getValue() == Value.PLUS4) {
                 System.out.println("Willst du die Karte anzweifeln? 'Ja' / 'Nein'");
                 cardInput = input.nextLine();
@@ -238,7 +234,6 @@ public class App {
             // TODO schleife implementieren
             if (validCard.value == Value.REVERSE) {
                 System.out.println("METHODE REVERSE WIRD AUFGERUFEN");
-
                 reverseDirection();
             }
             if (validCard.value == Value.SKIP) {
@@ -247,10 +242,17 @@ public class App {
             }
             if (validCard.value == Value.COLOR && validCard.type == Type.WILD) {
                 changeColor(input);
+
+                if (stapel.getAblageStapel().size() == 1 && (stapel.obersteKarte().value == Value.COLOR
+                        && stapel.obersteKarte().type == Type.WILD)) {
+                   nextPlayer();
+                   nextPlayer();
+                   nextPlayer();
+                   changeColor(input);
+                }
             }
         }
     }
-
 
     public void reverseDirection() {
         currentPlayer = nextPlayer();
@@ -258,8 +260,7 @@ public class App {
         System.out.println(currentPlayer.getName() + currentPlayer.printHand());
     }
 
-    public void
-    changeColor(Scanner input) {
+    public void changeColor(Scanner input) {
         String cardInput = input.nextLine();
         if (cardInput.equals("BLUE".toLowerCase(Locale.ROOT))) {
             stapel.obersteKarte().setType(Type.BLUE);
@@ -290,13 +291,8 @@ public class App {
         if (currentPlayerIndex > 3) {
             currentPlayerIndex = 0;
         }
-
         return players.get(currentPlayerIndex);
     }
-
-//    public void countCards() {
-//        System.out.println(deck.deck.size() + stapel.ablageStapel.size() + players.get(0).getHand().size() + players.get(1).getHand().size() + players.get(2).getHand().size() + players.get(3).getHand().size());
-//    }
 
     public boolean cardCanBePlayed(Card handCard, Card ablageStapelCard) {
         //  System.out.println("FUNKTION CARD CAN BE PLAYED");
@@ -340,7 +336,7 @@ public class App {
             return true;
         } else
             System.out.println("Falsche Anschuldigungen! Du musst 6 Karten heben!");
-            return false;
+        return false;
     }
 }
 
